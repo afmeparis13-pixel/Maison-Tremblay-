@@ -136,7 +136,7 @@ aside h2{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:
       <p>Les cotes viennent des plans. L'étage (918 × 670 cm sur le plan) est ramené sur l'emprise du rez-de-chaussée (902 × 660 cm), soit moins de 2 % d'écart.</p>
       <p>Valeurs estimées : hauteur sous plafond 2,50 m, dalle 20 cm, fenêtres de l'étage (allège 1,00 m), position exacte de l'escalier. Salon en carrelage taupe uni 60 × 60 cm, autres sols et teintes de murs neutres par défaut.</p>
       <p>Cuisine en L à gauche de l'entrée : frigo noir 60 × 60 × 180 à 10 cm de la fenêtre, deux meubles de 86 cm sous la fenêtre, meuble d'angle, évier (70 cm, cuve à 10 cm de l'angle), lave-vaisselle 60 cm, meuble de 100 cm, colonne four + micro-ondes jusqu'au plafond. Façades bois, plans de travail beige clair à 90 cm, îlot compris.</p>
-      <p>Modifié : fenêtres du mur arrière remplacées par deux baies vitrées de 1,85 m, du sol à 2,10 m. Terrasse de 22 m² (9,02 × 2,44 m) devant les baies, en lames bois, entourée de parois vitrées de 1,80 m.</p>
+      <p>Modifié : fenêtres du mur arrière remplacées par deux baies vitrées de 1,85 m, du sol à 2,10 m. Terrasse de 27 m² (9,02 × 2,99 m) devant les baies, en lames bois, entourée de parois vitrées de 1,80 m.</p>
       <p>Sous-sol d'après votre croquis : 9,25 m hors tout (sous la maison et la terrasse), 2,20 m sous plafond, sol en béton. Garage de 2,90 m de large côté cuisine, porte de garage 2,40 × 2,00 m à 56 cm du mur gauche côté entrée, porte extérieure à 1,03 m au fond. Mur de refend de 31 cm à 2,68 m du fond, ouvert sur 2,90 m. Escalier de 90 cm qui descend sous celui de l'étage, départ à 1 m des toilettes, fermé au sous-sol par un mur qui suit sa pente (dessous laissé libre), palier en bas de 1,25 m de profondeur entre la porte (80 cm) et le mur côté escalier.</p>
       <p>Salle de bain : douche 140 × 90 cm dans l'angle, fermée côté porte par un mur, entrée de 90 cm ; double vasque de 138 cm avec miroir de la même largeur.</p>
       <p>Toilettes au RDC : WC suspendu, porte de 73 cm face à l'escalier qui descend, avec 1 m de palier devant.</p>
@@ -167,7 +167,7 @@ const STACK = [2,0,1];                        // ordre physique des niveaux, du 
 // Sous-sol : 9,25 m hors tout (sous la maison + la terrasse) → intérieur de y=−271 à y=600
 const BY0 = -271, XW = 28;                    // mur de refend 31 cm : y −3 → 28, ouvert sur 2,90 m côté cuisine
 const DSTAIR = {x1:752, x2:842, yTop:280, yBot:280+13*(235/12)};   // départ reculé d'1 m : palier devant la porte des WC   // escalier qui descend, sous celui qui monte
-const EXT_T = 30, TER_D = 244;               // terrasse : largeur façade 902 cm × 244 cm ≈ 22 m², côté baies vitrées
+const EXT_T = 30, TER_D = 299;               // terrasse : largeur façade 902 cm × 299 cm ≈ 27 m², côté baies vitrées
 const TER_GLASS = 180;                       // hauteur des parois vitrées
 
 const ROOMS = [
@@ -175,7 +175,7 @@ const ROOMS = [
   {id:'garage', floor:2, name:'Garage', m2:'25,3', rects:[[0,BY0,290,600]], label:[145,330], mat:'concrete'},
   {id:'ssol', floor:2, name:'Sous-sol', m2:'31,6', rects:[[290,XW,842,600]], label:[520,300], mat:'concrete'},
   {id:'fond', floor:2, name:'Partie du fond', m2:'14,8', rects:[[290,BY0,842,-3]], label:[566,-137], mat:'concrete'},
-  {id:'terrasse', floor:0, name:'Terrasse', m2:'22', rects:[[-EXT_T,-30-TER_D,IW+EXT_T,-30]], label:[421,-152], mat:'deck'},
+  {id:'terrasse', floor:0, name:'Terrasse', m2:'27', rects:[[-EXT_T,-30-TER_D,IW+EXT_T,-30]], label:[421,-180], mat:'deck'},
   {id:'piece0', floor:0, name:'Toilettes', m2:'1,5', rects:[[750,0,842,165]], label:[796,82], mat:'tile'},
   {id:'ch1', floor:1, name:'Chambre 1', m2:'12,7', rects:[[0,0,478,267]], label:[240,130], mat:'wood'},
   {id:'ch2', floor:1, name:'Chambre 2', m2:'9,8', rects:[[484,0,842,267]], label:[662,130], mat:'wood'},
