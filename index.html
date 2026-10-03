@@ -1268,16 +1268,30 @@ canvas.addEventListener('dblclick',()=>{ if(moveMode && sel) document.getElement
   async function start(){
     if(started) return; started=true;
     status.textContent='Chargement des photos…';
+    // attend un peu la passerelle Claude si elle n'est pas encore prête
+    for(let k=0;k<15 && !(window.claude && window.claude.use);k++) await new Promise(r=>setTimeout(r,200));
     try{ db = (window.claude && window.claude.use) ? await window.claude.use('db') : null; }catch(e){ db=null; }
-    if(!db){ drop.classList.add('off'); fileIn.disabled=true;
-      status.textContent='Le partage des photos fonctionne sur la maquette en ligne de Claude, où les photos sont enregistrées pour tout le monde. Ici, elles ne peuvent pas être conservées.'; render(); return; }
-    status.textContent='';
+    if(!db){ db=localStore(); status.textContent='Copie hors Claude (GitHub) : les photos sont enregistrées sur cet appareil uniquement. Pour les partager avec tout le monde, utilisez la maquette en ligne de Claude.'; }
+    else status.textContent='';
     db.collection('photos').onSnapshot(snap=>{
       const atEnd = idx>=photos.length-1;
       photos=snap.docs.map(d=>({id:d.id, ...d.data()})).filter(p=>typeof p.img==='string' && p.img.startsWith('data:image/')).sort((a,b)=>(a.at||0)-(b.at||0));
       if(atEnd) idx=photos.length-1;
       render();
     }, ()=>{ status.textContent='Impossible de charger les photos pour le moment.'; });
+  }
+  // Stockage sur l'appareil (IndexedDB) quand la maquette est ouverte hors de Claude
+  function localStore(){
+    const openDb=()=>new Promise((res,rej)=>{ const rq=indexedDB.open('maison3d-photos',1);
+      rq.onupgradeneeded=()=>rq.result.createObjectStore('photos',{keyPath:'id'}); rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error); });
+    let listener=null;
+    const all=async()=>{ const d=await openDb(); return new Promise((res,rej)=>{ const rq=d.transaction('photos').objectStore('photos').getAll(); rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error); }); };
+    const emit=async()=>{ if(!listener) return; try{ const rows=await all(); listener({docs:rows.map(r=>({id:r.id, data:()=>r}))}); }catch(e){ status.textContent='Les photos ne peuvent pas être enregistrées dans ce navigateur (navigation privée ?).'; } };
+    return { collection:()=>({
+      onSnapshot(fn){ listener=fn; emit(); return ()=>{ listener=null; }; },
+      async add(doc){ const d=await openDb(); const id='p'+Date.now()+Math.random().toString(36).slice(2,7);
+        await new Promise((res,rej)=>{ const tx=d.transaction('photos','readwrite'); tx.objectStore('photos').put({id,...doc}); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); emit(); }
+    }) };
   }
   // réduction des images pour l'enregistrement (≈ 240 Ko maximum par photo)
   function loadImg(file){ return new Promise((res,rej)=>{ const url=URL.createObjectURL(file), im=new Image();
